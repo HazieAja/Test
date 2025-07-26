@@ -4,20 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-
+  <style>
   .text {
     display: flex;
     justify-content: column;
     align-items: center;
+    }
+</style>
 </head>
 <body>
-  
+  <div class= "container"></div>
 </body>
   <script>
     let usia = prompt("Masukkan usia mu");
 
 if (usia < 20) {
-  alert("KAMU DIBAWAH UMUR!!!")
   let kodeHTML = `<h1 class= "text">ANDA DIBLOKIR</h1>
                   <h3 class= "text">dikarenakan usia anda tidak memenuhi persyaratan kami</h3>`;
     // Memasukkan HTML ke elemen dengan ID "container"
