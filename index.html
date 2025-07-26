@@ -1,29 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <style>
-  .text {
-    display: flex;
-    height: 50vh;
-    justify-content: column;
-    align-items: center;
-    }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .text {
+      display: flex;
+      height: 50vh;
+      justify-content: center; /* tengah secara vertikal */
+      align-items: center;     /* tengah secara horizontal */
+      flex-direction: column;  /* arah layout vertikal */
+    }
+  </style>
 </head>
 <body>
-  <div class="text"><div id="container"></div></div>
-</body>
-  <script>
-    let usia = prompt("Masukkan usia mu");
+  <div class="text">
+    <div id="container"></div>
+  </div>
 
-if (usia < 20) {
-  let kodeHTML = `<h1>ANDA DIBLOKIR</h1>
-                  <h3>dikarenakan usia anda tidak memenuhi persyaratan kami</h3>`;
-    // Memasukkan HTML ke elemen dengan ID "container"
-    document.getElementById("container").innerHTML = kodeHTML;
-}
-  </script>
+  <script>
+    let usia = prompt("Masukkan usia mu");
+
+    if (usia < 20) {
+      let kodeHTML = `
+        <h1>ANDA DIBLOKIR</h1>
+        <h3>Dikarenakan usia anda tidak memenuhi persyaratan kami</h3>
+      `;
+      document.getElementById("container").innerHTML = kodeHTML;
+    }
+  </script>
+</body>
 </html>
