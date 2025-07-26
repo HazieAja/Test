@@ -13,14 +13,14 @@
 </style>
 </head>
 <body>
-  <div class= "container"></div>
+  <div class= "text"><div class= "container"></div></div>
 </body>
   <script>
     let usia = prompt("Masukkan usia mu");
 
 if (usia < 20) {
-  let kodeHTML = `<h1 class= "text">ANDA DIBLOKIR</h1>
-                  <h3 class= "text">dikarenakan usia anda tidak memenuhi persyaratan kami</h3>`;
+  let kodeHTML = `<h1>ANDA DIBLOKIR</h1>
+                  <h3>dikarenakan usia anda tidak memenuhi persyaratan kami</h3>`;
     // Memasukkan HTML ke elemen dengan ID "container"
     document.getElementById("container").innerHTML = kodeHTML;
 }
