@@ -17,7 +17,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
-      width: 90%; /* biar fleksibel di HP */
+      width: 90%;
       max-width: 600px;
     }
 
@@ -34,11 +34,13 @@
     let usia = prompt("Masukkan usia mu");
 
     if (usia < 20) {
-      let kodeHTML = `
+      document.getElementById("container").innerHTML = `
         <h1>ANDA DIBLOKIR</h1>
         <h3>Dikarenakan usia anda tidak memenuhi persyaratan kami</h3>
       `;
-      document.getElementById("container").innerHTML = kodeHTML;
+    } else {
+      // Redirect ke halaman lain
+      window.location.href = "https://hazyfireaja.github.io/Game-Menu/"; // Ganti dengan URL tujuanmu
     }
   </script>
 
