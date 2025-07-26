@@ -11,23 +11,24 @@
       height: 100%;
     }
 
-    .text {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+    .centered {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      width: 90%; /* biar fleksibel di HP */
+      max-width: 600px;
     }
 
-    #container {
-      width: 100%;
-      text-align: center;
+    h1, h3 {
+      margin: 0.5em 0;
     }
   </style>
 </head>
 <body>
-  <div class="text">
-    <div id="container"></div>
-  </div>
+
+  <div id="container" class="centered"></div>
 
   <script>
     let usia = prompt("Masukkan usia mu");
@@ -40,5 +41,6 @@
       document.getElementById("container").innerHTML = kodeHTML;
     }
   </script>
+
 </body>
 </html>
