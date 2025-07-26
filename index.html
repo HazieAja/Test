@@ -40,9 +40,12 @@
         <h3>Dikarenakan usia anda tidak memenuhi persyaratan kami</h3>
       `;
     } else {
-      // Redirect ke halaman lain
-      window.location.href = "https://hazyfireaja.github.io/Game-Menu/"; // Ganti dengan URL tujuanmu
-    }
+  // Simpan status bahwa user lolos umur
+  localStorage.setItem("lolosUmur", "true");
+
+  // Redirect ke halaman utama
+  window.location.href = "beranda.html";
+}
   </script>
 
 </body>
