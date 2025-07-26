@@ -1,46 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      box-sizing: border-box;
-    }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Validasi Usia</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
 
-    .text {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      height: 100vh;
-      text-align: center;
-    }
+    .text {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
 
-    #container {
-      width: 100%;
-    }
-  </style>
+    #container {
+      width: 100%;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-  <div class="text">
-    <div id="container"></div>
-  </div>
+  <div class="text">
+    <div id="container"></div>
+  </div>
 
-  <script>
-    let usia = prompt("Masukkan usia mu");
+  <script>
+    let usia = prompt("Masukkan usia mu");
 
-    if (usia < 20) {
-      let kodeHTML = `
-        <h1>ANDA DIBLOKIR</h1>
-        <h3>Dikarenakan usia anda tidak memenuhi persyaratan kami</h3>
-      `;
-      document.getElementById("container").innerHTML = kodeHTML;
-    }
-  </script>
+    if (usia < 20) {
+      let kodeHTML = `
+        <h1>ANDA DIBLOKIR</h1>
+        <h3>Dikarenakan usia anda tidak memenuhi persyaratan kami</h3>
+      `;
+      document.getElementById("container").innerHTML = kodeHTML;
+    }
+  </script>
 </body>
 </html>
