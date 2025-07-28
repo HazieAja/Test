@@ -32,20 +32,35 @@
   <div id="container" class="centered"></div>
 
   <script>
-    let usia = prompt("Masukkan usia mu");
+    const lolos = localStorage.getItem("lolosUmur");
 
-    if (usia < 20) {
-      document.getElementById("container").innerHTML = `
-        <h1>ANDA DIBLOKIR</h1>
-        <h3>Dikarenakan usia anda tidak memenuhi persyaratan kami</h3>
-      `;
+    if (lolos === "true") {
+      // Sudah lolos sebelumnya
+      window.location.href = "https://hazieaja.github.io/Game-Menu-v3/";
     } else {
-  // Simpan status bahwa user lolos umur
-  localStorage.setItem("lolosUmur", "true");
+      const usia = prompt("Masukkan usia mu");
 
-  // Redirect ke halaman utama
-  window.location.href = "https://hazieaja.github.io/Game-Menu-v3/";
-}
+      // Jika user klik cancel atau tidak isi apa-apa
+      if (usia === null || usia.trim() === "") {
+        document.getElementById("container").innerHTML = `
+          <h1>Akses Dibatalkan</h1>
+          <h3>Anda tidak memasukkan usia. Silakan kembali dan coba lagi.</h3>
+        `;
+      } else if (isNaN(usia) || usia < 0) {
+        document.getElementById("container").innerHTML = `
+          <h1>Input Tidak Valid</h1>
+          <h3>Masukkan angka usia yang benar!</h3>
+        `;
+      } else if (usia < 20) {
+        document.getElementById("container").innerHTML = `
+          <h1>ANDA DIBLOKIR</h1>
+          <h3>Dikarenakan usia anda tidak memenuhi persyaratan kami</h3>
+        `;
+      } else {
+        localStorage.setItem("lolosUmur", "true");
+        window.location.href = "https://hazieaja.github.io/Game-Menu-v3/";
+      }
+    }
   </script>
 
 </body>
