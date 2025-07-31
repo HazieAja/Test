@@ -5,48 +5,87 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Validasi Usia</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: sans-serif;
-      background-color: #f0f0f0;
       margin: 0;
-      padding: 2rem;
-      text-align: center;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(to right, #e0eafc, #cfdef3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
-    #container {
-      background: white;
+    .card {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
       max-width: 400px;
-      margin: auto;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      width: 90%;
+      text-align: center;
+      animation: fadeIn 0.5s ease-in-out;
     }
-    input, button {
+    h2 {
+      margin-top: 0;
+    }
+    input {
       padding: 0.6rem;
-      margin: 0.5rem;
+      width: 100%;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
       font-size: 1rem;
-      border-radius: 5px;
       border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      transition: 0.3s;
+    }
+    input:focus {
+      border-color: #007bff;
     }
     button {
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      margin: 0.4rem;
       cursor: pointer;
+      transition: 0.3s;
     }
-    #masukBtn, #logoutBtn {
+    .btn-primary {
+      background-color: #007bff;
+      color: white;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+    }
+    .btn-secondary:hover {
+      background-color: #565e64;
+    }
+    .hidden {
       display: none;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-  <div id="container">
+  <div class="card" id="container">
     <h2>Masukkan Usia Anda</h2>
-    <input type="number" id="usiaInput" placeholder="Contoh: 18" />
-    <br>
-    <button onclick="cekUsia()">Lanjut</button>
-    <br><br>
-    <button id="rahasiaBtn" onclick="cekPassword()">🔒 Tombol Rahasia</button>
-    <br>
-    <button id="masukBtn" onclick="masuk()">➡️ Masuk ke Website</button>
-    <br><br>
-    <button id="logoutBtn" onclick="logout()">🔓 Logout</button>
+    <input type="number" id="usiaInput" placeholder="Contoh: 18">
+    <button class="btn-primary" onclick="cekUsia()">Lanjut</button>
+    <div>
+      <button id="rahasiaBtn" class="btn-secondary hidden" onclick="cekPassword()">Rahasia</button>
+      <button id="masukBtn" class="btn-primary hidden" onclick="masuk()">Masuk</button>
+      <button id="logoutBtn" class="btn-secondary hidden" onclick="logout()">Logout</button>
+    </div>
   </div>
 
   <script>
@@ -69,13 +108,13 @@
 
       if (usia < 18 || usia > 60) {
         let alasan = usia < 18 ? "minimum" : "maksimum";
-        let waktu = 10; // ⏲️ Ubah waktu blokir di sini (detik)
+        let waktu = 10;
 
         const interval = setInterval(() => {
           container.innerHTML = `
             <h1>ANDA DIBLOKIR</h1>
-            <h3>Usia Anda tidak memenuhi syarat ${alasan}.</h3>
-            <p>Anda akan diarahkan ulang dalam ${waktu} detik.</p>
+            <p>Usia Anda tidak memenuhi syarat ${alasan}.</p>
+            <p>Refresh otomatis dalam <strong>${waktu}</strong> detik...</p>
           `;
           waktu--;
           if (waktu < 0) {
@@ -91,27 +130,26 @@
     }
 
     function tampilkanTombol() {
-      rahasiaBtn.style.display = "inline-block";
-      logoutBtn.style.display = "inline-block";
+      rahasiaBtn.classList.remove("hidden");
+      logoutBtn.classList.remove("hidden");
     }
 
     function cekPassword() {
-      const password = prompt("Masukkan Password Rahasia:");
+      const password = prompt("Masukkan password:");
       if (password === "hazyfire") {
         alert("Password benar!");
-        masukBtn.style.display = "inline-block";
+        masukBtn.classList.remove("hidden");
       } else {
         alert("Password salah!");
       }
     }
 
     function masuk() {
-      let waktuMasuk = 5; // ⏲️ Ubah countdown masuk di sini (detik)
+      let waktuMasuk = 5;
       container.innerHTML = `
         <h1>Memuat...</h1>
-        <h3>Mengarahkan ke halaman utama dalam <span id="cd">${waktuMasuk}</span> detik...</h3>
+        <p>Masuk ke website dalam <strong id="cd">${waktuMasuk}</strong> detik...</p>
       `;
-
       const interval = setInterval(() => {
         waktuMasuk--;
         document.getElementById("cd").textContent = waktuMasuk;
