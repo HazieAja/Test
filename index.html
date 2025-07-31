@@ -133,6 +133,13 @@
           localStorage.setItem("lolosUmur", "true");
           showMasukLogout();
         }
+
+        if (usia >= 60) {
+          container.innerHTML = `
+            <h1>ANDA DIBLOKIR</h1>
+            <h3>Usia Anda tidak memenuhi persyaratan maksimum.</h3>
+          `;
+        }
       }
     }
   </script>
