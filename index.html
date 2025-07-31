@@ -54,6 +54,7 @@
       color: #000;
       font-weight: bold;
       transition: background 0.3s, transform 0.2s;
+      margin: 6px;
     }
 
     button:hover {
@@ -74,11 +75,17 @@
       container.innerHTML = `
         <h1>Selamat Datang Kembali</h1>
         <h3>Akses Anda Sudah Diverifikasi</h3>
-        <button onclick="masuk()">Masuk ke Website</button>
+        <button onclick="masuk()">Masuk ke Website</button><br>
+        <button onclick="logout()">Logout</button>
       `;
 
       function masuk() {
         window.location.href = "https://hazieaja.github.io/Game-Menu-v3/";
+      }
+
+      function logout() {
+        localStorage.removeItem("lolosUmur");
+        location.reload();
       }
 
     } else {
@@ -104,8 +111,14 @@
         container.innerHTML = `
           <h1>Verifikasi Berhasil</h1>
           <h3>Silakan masuk ke website utama.</h3>
-          <button onclick="window.location.href='https://hazieaja.github.io/Game-Menu-v3/'">Masuk ke Website</button>
+          <button onclick="window.location.href='https://hazieaja.github.io/Game-Menu-v3/'">Masuk ke Website</button><br>
+          <button onclick="logout()">Logout</button>
         `;
+
+        function logout() {
+          localStorage.removeItem("lolosUmur");
+          location.reload();
+        }
       }
     }
   </script>
