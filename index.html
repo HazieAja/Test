@@ -110,7 +110,7 @@
       container.innerHTML = `
         <h1>Verifikasi Usia</h1>
         <h3>Masukkan usia Anda untuk melanjutkan</h3>
-        <input type="number" id="usia" placeholder="Contoh: 21" /><br>
+        <input type="number" id="usia" placeholder="Masukkan usia" /><br>
         <button onclick="cekUsia()">Lanjutkan</button>
         <div id="pesanError" class="error"></div>
       `;
@@ -124,21 +124,22 @@
           return;
         }
 
-        if (usia < 20) {
+        if (usia < 18) {
           container.innerHTML = `
             <h1>ANDA DIBLOKIR</h1>
             <h3>Usia Anda tidak memenuhi persyaratan minimum.</h3>
           `;
-        } else {
-          localStorage.setItem("lolosUmur", "true");
-          showMasukLogout();
         }
-
         if (usia >= 60) {
           container.innerHTML = `
             <h1>ANDA DIBLOKIR</h1>
             <h3>Usia Anda tidak memenuhi persyaratan maksimum.</h3>
           `;
+        }
+
+        if (usia > 18) {
+          localStorage.setItem("lolosUmur", "true");
+          showMasukLogout();
         }
       }
     }
