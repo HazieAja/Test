@@ -1,181 +1,130 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Validasi Usia</title>
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
-    }
-
     body {
+      font-family: sans-serif;
+      background-color: #f0f0f0;
       margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #1e1e2f, #2a2a40);
-      color: #fff;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .container {
+      padding: 2rem;
       text-align: center;
-      background: rgba(0, 0, 0, 0.6);
-      padding: 30px 20px;
-      border-radius: 16px;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    }
+    #container {
+      background: white;
       max-width: 400px;
-      width: 90%;
+      margin: auto;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
-
-    h1 {
-      font-size: 28px;
-      margin-bottom: 10px;
-      color: #00ffff;
+    input, button {
+      padding: 0.6rem;
+      margin: 0.5rem;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
     }
-
-    h3 {
-      font-weight: normal;
-      color: #ccc;
-      margin-top: 0;
-      margin-bottom: 20px;
-    }
-
-    input {
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      width: 80%;
-      font-size: 16px;
-      text-align: center;
-    }
-
     button {
-      padding: 12px 24px;
-      font-size: 16px;
-      background: #00ffff;
-      border: none;
-      border-radius: 8px;
       cursor: pointer;
-      color: #000;
-      font-weight: bold;
-      transition: background 0.3s, transform 0.2s;
-      margin: 6px;
     }
-
-    button:hover:enabled {
-      background: #00e6e6;
-      transform: scale(1.05);
-    }
-
-    button:disabled {
-      background: #555;
-      color: #999;
-      cursor: not-allowed;
-    }
-
-    .error {
-      color: #ff7b7b;
-      font-weight: bold;
+    #masukBtn, #logoutBtn {
+      display: none;
     }
   </style>
 </head>
 <body>
-  <div class="container" id="container"></div>
+  <div id="container">
+    <h2>Masukkan Usia Anda</h2>
+    <input type="number" id="usiaInput" placeholder="Contoh: 18" />
+    <br>
+    <button onclick="cekUsia()">Lanjut</button>
+    <br><br>
+    <button id="rahasiaBtn" onclick="cekPassword()">🔒 Tombol Rahasia</button>
+    <br>
+    <button id="masukBtn" onclick="masuk()">➡️ Masuk ke Website</button>
+    <br><br>
+    <button id="logoutBtn" onclick="logout()">🔓 Logout</button>
+  </div>
 
   <script>
     const container = document.getElementById("container");
-    const lolos = localStorage.getItem("lolosUmur");
-    const countdownTime = 5; // detik
+    const rahasiaBtn = document.getElementById("rahasiaBtn");
+    const masukBtn = document.getElementById("masukBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
 
-    function showMasukLogout() {
-      const waktuSet = localStorage.getItem("waktuLolos");
-      const now = Date.now();
-      const selisih = Math.floor((countdownTime * 1000 - (now - waktuSet)) / 1000);
+    if (localStorage.getItem("lolosUmur")) {
+      tampilkanTombol();
+    }
 
-      if (selisih > 0) {
-        // countdown belum selesai
-        localStorage.removeItem("lolosUmur");
-        localStorage.removeItem("waktuLolos");
-        location.reload(); // reset
+    function cekUsia() {
+      const usia = parseInt(document.getElementById("usiaInput").value);
+
+      if (isNaN(usia)) {
+        alert("Masukkan usia yang valid!");
         return;
       }
 
-      container.innerHTML = `
-        <h1>Selamat Datang</h1>
-        <h3>Akses Anda Sudah Diverifikasi</h3>
-        <button onclick="masuk()">Masuk ke Website</button><br>
-        <button onclick="logout()">Logout</button>
-      `;
+      if (usia < 18 || usia > 60) {
+        let alasan = usia < 18 ? "minimum" : "maksimum";
+        let waktu = 10; // ⏲️ Ubah waktu blokir di sini (detik)
+
+        const interval = setInterval(() => {
+          container.innerHTML = `
+            <h1>ANDA DIBLOKIR</h1>
+            <h3>Usia Anda tidak memenuhi syarat ${alasan}.</h3>
+            <p>Anda akan diarahkan ulang dalam ${waktu} detik.</p>
+          `;
+          waktu--;
+          if (waktu < 0) {
+            clearInterval(interval);
+            location.reload();
+          }
+        }, 1000);
+        return;
+      }
+
+      localStorage.setItem("lolosUmur", "true");
+      tampilkanTombol();
+    }
+
+    function tampilkanTombol() {
+      rahasiaBtn.style.display = "inline-block";
+      logoutBtn.style.display = "inline-block";
+    }
+
+    function cekPassword() {
+      const password = prompt("Masukkan Password Rahasia:");
+      if (password === "hazyfire") {
+        alert("Password benar!");
+        masukBtn.style.display = "inline-block";
+      } else {
+        alert("Password salah!");
+      }
     }
 
     function masuk() {
-      window.location.href = "https://hazieaja.github.io/Game-Menu-v3/";
+      let waktuMasuk = 5; // ⏲️ Ubah countdown masuk di sini (detik)
+      container.innerHTML = `
+        <h1>Memuat...</h1>
+        <h3>Mengarahkan ke halaman utama dalam <span id="cd">${waktuMasuk}</span> detik...</h3>
+      `;
+
+      const interval = setInterval(() => {
+        waktuMasuk--;
+        document.getElementById("cd").textContent = waktuMasuk;
+        if (waktuMasuk <= 0) {
+          clearInterval(interval);
+          window.location.href = "https://hazieaja.github.io/Game-Menu-v3/";
+        }
+      }, 1000);
     }
 
     function logout() {
       localStorage.removeItem("lolosUmur");
-      localStorage.removeItem("waktuLolos");
       location.reload();
-    }
-
-    if (lolos === "true") {
-      showMasukLogout();
-    } else {
-      container.innerHTML = `
-        <h1>Verifikasi Usia</h1>
-        <h3>Masukkan usia Anda untuk melanjutkan</h3>
-        <input type="number" id="usia" placeholder="Masukkan usia" /><br>
-        <button onclick="cekUsia()">Lanjutkan</button>
-        <div id="pesanError" class="error"></div>
-      `;
-
-      window.cekUsia = function () {
-        const usia = parseInt(document.getElementById("usia").value);
-        const pesanError = document.getElementById("pesanError");
-
-        if (isNaN(usia) || usia <= 0) {
-          pesanError.textContent = "Masukkan usia yang valid!";
-          return;
-        }
-
-        if (usia < 18 || usia > 60) {
-          container.innerHTML = `
-            <h1>ANDA DIBLOKIR</h1>
-            <h3>Usia Anda tidak memenuhi persyaratan akses.</h3>
-          `;
-          return;
-        }
-
-        localStorage.setItem("lolosUmur", "true");
-        localStorage.setItem("waktuLolos", Date.now().toString());
-
-        // Tampilkan countdown
-        container.innerHTML = `
-          <h1>Verifikasi Berhasil</h1>
-          <h3>Anda dapat masuk dalam <span id="waktu">5</span> detik</h3>
-          <button id="btnMasuk" disabled>Masuk ke Website</button><br>
-          <button onclick="logout()">Logout</button>
-        `;
-
-        const waktuEl = document.getElementById("waktu");
-        const btnMasuk = document.getElementById("btnMasuk");
-        let sisa = countdownTime;
-
-        const interval = setInterval(() => {
-          sisa--;
-          waktuEl.textContent = sisa;
-          if (sisa <= 0) {
-            clearInterval(interval);
-            btnMasuk.disabled = false;
-            btnMasuk.onclick = masuk;
-          }
-        }, 1000);
-      }
     }
   </script>
 </body>
