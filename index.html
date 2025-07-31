@@ -1,45 +1,76 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Validasi Usia</title>
   <style>
-    html, body {
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
       margin: 0;
       padding: 0;
-      height: 100%;
+      background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-    .centered {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+
+    .container {
       text-align: center;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 30px 20px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+      max-width: 400px;
       width: 90%;
-      max-width: 600px;
     }
-    h1, h3 {
-      margin: 0.5em 0;
-      color: red;
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+      color: #00ffff;
     }
+
+    h3 {
+      font-weight: normal;
+      color: #ccc;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
     button {
-      padding: 10px 20px;
+      padding: 12px 24px;
       font-size: 16px;
+      background: #00ffff;
+      border: none;
+      border-radius: 8px;
       cursor: pointer;
+      color: #000;
+      font-weight: bold;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    button:hover {
+      background: #00e6e6;
+      transform: scale(1.05);
     }
   </style>
 </head>
 <body>
 
-  <div id="container" class="centered"></div>
+  <div class="container" id="container"></div>
 
   <script>
     const container = document.getElementById("container");
     const lolos = localStorage.getItem("lolosUmur");
 
     if (lolos === "true") {
-      // Sudah lolos sebelumnya, tampilkan tombol masuk
       container.innerHTML = `
         <h1>Selamat Datang Kembali</h1>
         <h3>Akses Anda Sudah Diverifikasi</h3>
@@ -51,7 +82,7 @@
       }
 
     } else {
-      const usia = prompt("Masukkan usia mu");
+      const usia = prompt("Masukkan usia kamu:");
 
       if (usia === null || usia.trim() === "") {
         container.innerHTML = `
@@ -66,12 +97,13 @@
       } else if (usia < 20) {
         container.innerHTML = `
           <h1>ANDA DIBLOKIR</h1>
-          <h3>Dikarenakan usia anda tidak memenuhi persyaratan kami</h3>
+          <h3>Usia Anda tidak memenuhi persyaratan minimum.</h3>
         `;
       } else {
         localStorage.setItem("lolosUmur", "true");
         container.innerHTML = `
           <h1>Verifikasi Berhasil</h1>
+          <h3>Silakan masuk ke website utama.</h3>
           <button onclick="window.location.href='https://hazieaja.github.io/Game-Menu-v3/'">Masuk ke Website</button>
         `;
       }
