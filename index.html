@@ -67,9 +67,15 @@
       margin: 6px;
     }
 
-    button:hover {
+    button:hover:enabled {
       background: #00e6e6;
       transform: scale(1.05);
+    }
+
+    button:disabled {
+      background: #555;
+      color: #999;
+      cursor: not-allowed;
     }
 
     .error {
@@ -79,14 +85,26 @@
   </style>
 </head>
 <body>
-
   <div class="container" id="container"></div>
 
   <script>
     const container = document.getElementById("container");
     const lolos = localStorage.getItem("lolosUmur");
+    const countdownTime = 5; // detik
 
     function showMasukLogout() {
+      const waktuSet = localStorage.getItem("waktuLolos");
+      const now = Date.now();
+      const selisih = Math.floor((countdownTime * 1000 - (now - waktuSet)) / 1000);
+
+      if (selisih > 0) {
+        // countdown belum selesai
+        localStorage.removeItem("lolosUmur");
+        localStorage.removeItem("waktuLolos");
+        location.reload(); // reset
+        return;
+      }
+
       container.innerHTML = `
         <h1>Selamat Datang</h1>
         <h3>Akses Anda Sudah Diverifikasi</h3>
@@ -101,6 +119,7 @@
 
     function logout() {
       localStorage.removeItem("lolosUmur");
+      localStorage.removeItem("waktuLolos");
       location.reload();
     }
 
@@ -124,26 +143,40 @@
           return;
         }
 
-        if (usia < 18) {
+        if (usia < 18 || usia > 60) {
           container.innerHTML = `
             <h1>ANDA DIBLOKIR</h1>
-            <h3>Usia Anda tidak memenuhi persyaratan minimum.</h3>
+            <h3>Usia Anda tidak memenuhi persyaratan akses.</h3>
           `;
-        }
-        if (usia > 60) {
-          container.innerHTML = `
-            <h1>ANDA DIBLOKIR</h1>
-            <h3>Usia Anda tidak memenuhi persyaratan maksimum.</h3>
-          `;
+          return;
         }
 
-        if (usia > 18) {
-          localStorage.setItem("lolosUmur", "true");
-          showMasukLogout();
-        }
+        localStorage.setItem("lolosUmur", "true");
+        localStorage.setItem("waktuLolos", Date.now().toString());
+
+        // Tampilkan countdown
+        container.innerHTML = `
+          <h1>Verifikasi Berhasil</h1>
+          <h3>Anda dapat masuk dalam <span id="waktu">5</span> detik</h3>
+          <button id="btnMasuk" disabled>Masuk ke Website</button><br>
+          <button onclick="logout()">Logout</button>
+        `;
+
+        const waktuEl = document.getElementById("waktu");
+        const btnMasuk = document.getElementById("btnMasuk");
+        let sisa = countdownTime;
+
+        const interval = setInterval(() => {
+          sisa--;
+          waktuEl.textContent = sisa;
+          if (sisa <= 0) {
+            clearInterval(interval);
+            btnMasuk.disabled = false;
+            btnMasuk.onclick = masuk;
+          }
+        }, 1000);
       }
     }
   </script>
-
 </body>
 </html>
