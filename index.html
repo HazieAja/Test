@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Validasi Usia</title>
   <style>
     * {
@@ -12,177 +12,160 @@
 
     body {
       margin: 0;
-      padding: 0;
-      background: linear-gradient(to bottom right, #f0f0f0, #dcdcdc);
-      min-height: 100vh;
+      background: #f5f5f5;
       display: flex;
       justify-content: center;
       align-items: center;
+      height: 100vh;
     }
 
     .container {
-      background: white;
+      background: #fff;
       padding: 2em;
-      border-radius: 12px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
       max-width: 400px;
       width: 90%;
       text-align: center;
     }
 
     h1 {
-      color: #d33;
+      color: #e74c3c;
     }
 
     input[type="number"], input[type="password"] {
-      width: 100%;
       padding: 0.7em;
+      width: 100%;
       margin: 1em 0;
+      border-radius: 5px;
       border: 1px solid #ccc;
-      border-radius: 8px;
     }
 
     button {
-      padding: 0.7em 1.2em;
-      margin: 0.5em;
+      padding: 0.7em 1.5em;
       border: none;
-      border-radius: 8px;
-      background-color: #007BFF;
-      color: white;
+      background-color: #3498db;
+      color: #fff;
+      font-size: 1em;
+      border-radius: 5px;
       cursor: pointer;
-      transition: background 0.3s;
     }
 
     button:hover {
-      background-color: #0056b3;
-    }
-
-    #logoutBtn {
-      background-color: #dc3545;
-    }
-
-    #logoutBtn:hover {
-      background-color: #a91e2c;
+      background-color: #2980b9;
     }
 
     .hidden {
       display: none;
     }
 
-    #countdown {
-      font-size: 1.2em;
+    #logout {
       margin-top: 1em;
+      background: #e74c3c;
     }
   </style>
 </head>
 <body>
+  <div class="container" id="app">
+    <div id="form-usia" class="">
+      <h1>Masukkan Usia Anda</h1>
+      <input type="number" id="usia" placeholder="Contoh: 25" min="1" />
+      <button onclick="cekUsia()">Lanjut</button>
+    </div>
 
-<div class="container" id="app">
-  <h1>Validasi Usia</h1>
-  <div id="inputSection">
-    <p>Masukkan usia kamu untuk lanjut:</p>
-    <input type="number" id="usiaInput" placeholder="Contoh: 20">
-    <button onclick="cekUsia()">Lanjut</button>
+    <div id="form-password" class="hidden">
+      <h1>Masukkan Password</h1>
+      <input type="password" id="password" placeholder="Password rahasia"/>
+      <button onclick="cekPassword()">Masuk</button>
+    </div>
+
+    <div id="terblokir" class="hidden">
+      <h1>Akses Diblokir</h1>
+      <p id="pesan-blokir"></p>
+    </div>
+
+    <div id="masuk" class="hidden">
+      <h1>Selamat Datang!</h1>
+      <p>Anda lolos verifikasi usia.</p>
+      <button onclick="lanjutKeWeb()">Lanjut ke Website</button>
+      <button id="logout" onclick="logout()">Logout</button>
+    </div>
   </div>
 
-  <div id="blockedSection" class="hidden">
-    <h2>ANDA DIBLOKIR</h2>
-    <p>Usia tidak memenuhi persyaratan kami.</p>
-    <p id="countdownBlock"></p>
-  </div>
+  <script>
+    const umurMaks = 80;
+    const umurMin = 20;
+    const waktuBlokir = 10; // detik
+    const passwordBenar = "rahasia123";
 
-  <div id="allowedSection" class="hidden">
-    <button onclick="mulaiMasuk()">Masuk ke Website</button>
-    <p id="countdownMasuk"></p>
-    <button id="logoutBtn" onclick="logout()">Logout</button>
-    <button onclick="munculPassword()">🔒 Tombol Rahasia</button>
-  </div>
+    const formUsia = document.getElementById("form-usia");
+    const formPassword = document.getElementById("form-password");
+    const formMasuk = document.getElementById("masuk");
+    const formTerblokir = document.getElementById("terblokir");
 
-  <div id="passwordSection" class="hidden">
-    <h2>Masukkan Password</h2>
-    <input type="password" id="passwordInput" placeholder="Password">
-    <button onclick="cekPassword()">Submit</button>
-    <p id="passwordResult"></p>
-  </div>
-</div>
-
-<script>
-  const umurMin = 18;
-  const umurMax = 60;
-  const waktuMasuk = 5; // detik
-  const waktuBlokir = 60; // detik
-  const passwordBenar = "rahasia123";
-
-  const lolos = localStorage.getItem("lolosUmur");
-  const inputSection = document.getElementById("inputSection");
-  const allowedSection = document.getElementById("allowedSection");
-  const blockedSection = document.getElementById("blockedSection");
-
-  if (lolos === "true") {
-    inputSection.classList.add("hidden");
-    allowedSection.classList.remove("hidden");
-  }
-
-  function cekUsia() {
-    const usia = parseInt(document.getElementById("usiaInput").value);
-    if (isNaN(usia)) return alert("Masukkan angka usia yang valid");
-
-    if (usia < umurMin || usia > umurMax) {
-      inputSection.classList.add("hidden");
-      blockedSection.classList.remove("hidden");
-      startCountdown("countdownBlock", waktuBlokir, () => {
-        blockedSection.classList.add("hidden");
-        inputSection.classList.remove("hidden");
-      });
-    } else {
-      localStorage.setItem("lolosUmur", "true");
-      inputSection.classList.add("hidden");
-      allowedSection.classList.remove("hidden");
+    // Cek status login
+    if (localStorage.getItem("lolosUmur") === "true") {
+      formUsia.classList.add("hidden");
+      formMasuk.classList.remove("hidden");
     }
-  }
 
-  function mulaiMasuk() {
-    document.getElementById("countdownMasuk").textContent = "Mengalihkan...";
-    startCountdown("countdownMasuk", waktuMasuk, () => {
-      window.location.href = "https://hazieaja.github.io/Game-Menu-v3/";
-    });
-  }
-
-  function startCountdown(id, seconds, callback) {
-    const el = document.getElementById(id);
-    let waktu = seconds;
-    el.textContent = `Tunggu ${waktu} detik...`;
-    const interval = setInterval(() => {
-      waktu--;
-      el.textContent = `Tunggu ${waktu} detik...`;
-      if (waktu <= 0) {
-        clearInterval(interval);
-        callback();
+    function cekUsia() {
+      const usia = parseInt(document.getElementById("usia").value);
+      if (isNaN(usia) || usia <= 0) {
+        alert("Masukkan usia yang valid.");
+        return;
       }
-    }, 1000);
-  }
 
-  function logout() {
-    localStorage.removeItem("lolosUmur");
-    location.reload();
-  }
+      if (usia < umurMin || usia > umurMaks) {
+        formUsia.classList.add("hidden");
+        formTerblokir.classList.remove("hidden");
+        let sisa = waktuBlokir;
+        const pesan = document.getElementById("pesan-blokir");
 
-  function munculPassword() {
-    document.getElementById("passwordSection").classList.remove("hidden");
-  }
-
-  function cekPassword() {
-    const input = document.getElementById("passwordInput").value;
-    const hasil = document.getElementById("passwordResult");
-    if (input === passwordBenar) {
-      hasil.textContent = "Password benar! Akses diberikan.";
-      hasil.style.color = "green";
-    } else {
-      hasil.textContent = "Password salah!";
-      hasil.style.color = "red";
+        const interval = setInterval(() => {
+          pesan.textContent = `Usia anda tidak memenuhi syarat. Silakan tunggu ${sisa} detik...`;
+          sisa--;
+          if (sisa < 0) {
+            clearInterval(interval);
+            location.reload();
+          }
+        }, 1000);
+      } else {
+        formUsia.classList.add("hidden");
+        formPassword.classList.remove("hidden");
+      }
     }
-  }
-</script>
 
+    function cekPassword() {
+      const input = document.getElementById("password").value;
+      if (input === passwordBenar) {
+        localStorage.setItem("lolosUmur", "true");
+        formPassword.classList.add("hidden");
+        formMasuk.classList.remove("hidden");
+      } else {
+        alert("Password salah!");
+      }
+    }
+
+    function lanjutKeWeb() {
+      let countdown = 5;
+      const btn = event.target;
+      btn.disabled = true;
+      btn.textContent = `Mengalihkan dalam ${countdown} detik...`;
+      const timer = setInterval(() => {
+        countdown--;
+        btn.textContent = `Mengalihkan dalam ${countdown} detik...`;
+        if (countdown === 0) {
+          clearInterval(timer);
+          window.location.href = "https://hazieaja.github.io/Game-Menu-v3/";
+        }
+      }, 1000);
+    }
+
+    function logout() {
+      localStorage.removeItem("lolosUmur");
+      location.reload();
+    }
+  </script>
 </body>
 </html>
