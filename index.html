@@ -92,6 +92,7 @@
         clearInterval(interval);
         window.close(); // kalau tidak didukung, tidak akan berpengaruh
         showFormUsia();
+        localStorage.removeItem("blokirUmur");
       }
     }, 1000);
   }
@@ -118,6 +119,7 @@
         const input = prompt("Masukkan password:");
         if (input === passwordBenar) {
           window.location.href = redirectURL;
+          
         } else {
           alert("Password salah!");
           showMasukWebsite();
