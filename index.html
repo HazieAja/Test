@@ -120,6 +120,7 @@
         formUsia.classList.add("hidden");
         formTerblokir.classList.remove("hidden");
         let sisa = waktuBlokir;
+        window.onbeforeunload = () => "Silakan tunggu hingga waktu habis.";
         const pesan = document.getElementById("pesan-blokir");
 
         const interval = setInterval(() => {
