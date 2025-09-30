@@ -53,13 +53,77 @@
     }
 
     .hidden {
-      display: none;
+      display: none !important;
     }
+
+    /* --- Styles for easter egg overlay (does not affect main UI until used) --- */
+    #easterHintOverlay {
+      position: fixed;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.6);
+      z-index: 9999;
+      padding: 20px;
+    }
+    #easterHintBox {
+      background: white;
+      border-radius: 10px;
+      padding: 18px;
+      max-width: 90%;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    #easterHintBox p {
+      margin: 0 0 12px 0;
+      font-size: 1rem;
+      color: #222;
+    }
+    #easterHintBox button {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      background: #007bff;
+      color: white;
+    }
+
+    /* The easter image itself - initially hidden by `.hidden` so UI unchanged */
+    #easterImg {
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      width: 56px;
+      height: auto;
+      cursor: pointer;
+      z-index: 9998;
+      user-select: none;
+      -webkit-user-drag: none;
+      transition: transform .12s ease;
+    }
+    #easterImg:active { transform: scale(0.98); }
   </style>
 </head>
 <body>
 
 <div id="app" class="centered"></div>
+
+<!-- EASTER EGG IMAGE (default hidden). 
+     Cara kustomisasi: edit `src` atribut atau panggil setEasterEggImage('URL-GAMBAR.png', widthPx, heightPx) dari console.
+     Karena default memiliki class ".hidden", UI utama tidak berubah sampai Anda menampilkan gambar. -->
+<img id="easterImg" class="hidden" src="" alt="Easter Egg" draggable="false" />
+
+<!-- EASTER EGG HINT OVERLAY (default hidden) -->
+<div id="easterHintOverlay" class="hidden" aria-hidden="true">
+  <div id="easterHintBox" role="dialog" aria-modal="true">
+    <p id="easterHintText">Ini adalah petunjuk easter egg.</p>
+    <button id="easterCloseBtn">Tutup</button>
+  </div>
+</div>
 
 <script>
   const app = document.getElementById("app");
@@ -161,6 +225,85 @@
   } else {
     showFormUsia();
   }
+
+  /* ------------------ EASTER EGG LOGIC ------------------ */
+  const easterImg = document.getElementById('easterImg');
+  const easterOverlay = document.getElementById('easterHintOverlay');
+  const easterHintText = document.getElementById('easterHintText');
+  const easterCloseBtn = document.getElementById('easterCloseBtn');
+
+  // Default hint text (bisa diubah lewat API di bawah)
+  let currentHint = 'Klik gambar lagi untuk membuka rahasia.';
+
+  // Ketika gambar diklik: tampilkan overlay petunjuk
+  easterImg.addEventListener('click', function (e) {
+    // Jika src belum di-set, jangan lakukan apa-apa.
+    if (!easterImg.src || easterImg.classList.contains('hidden')) return;
+    easterHintText.textContent = currentHint;
+    easterOverlay.classList.remove('hidden');
+    easterOverlay.setAttribute('aria-hidden', 'false');
+  });
+
+  // Tutup overlay
+  easterCloseBtn.addEventListener('click', () => {
+    easterOverlay.classList.add('hidden');
+    easterOverlay.setAttribute('aria-hidden', 'true');
+  });
+
+  // Klik di luar box juga menutup overlay
+  easterOverlay.addEventListener('click', (e) => {
+    if (e.target === easterOverlay) {
+      easterOverlay.classList.add('hidden');
+      easterOverlay.setAttribute('aria-hidden', 'true');
+    }
+  });
+
+  // --- PUBLIC API untuk kustomisasi ease ter egg ---
+  // 1) setEasterEggImage(url, widthPx, heightPx)
+  //    - men-set src gambar dan menampilkan gambar. widthPx/heightPx opsional.
+  // 2) hideEasterEgg()
+  //    - menyembunyikan gambar (mengembalikan UI ke semula)
+  // 3) setEasterHintText(text)
+  //    - mengubah teks petunjuk yang muncul saat klik
+  // 4) showEasterEgg() menampilkan gambar (menghapus class hidden jika src sudah diisi)
+  window.setEasterEggImage = function(url, widthPx, heightPx) {
+    if (!url || typeof url !== 'string') {
+      console.warn('Masukkan URL gambar (string).');
+      return;
+    }
+    easterImg.src = url;
+    easterImg.classList.remove('hidden');
+    // jika ingin atur ukuran khusus
+    if (widthPx) easterImg.style.width = (typeof widthPx === 'number' ? widthPx + 'px' : widthPx);
+    if (heightPx) easterImg.style.height = (typeof heightPx === 'number' ? heightPx + 'px' : heightPx);
+  };
+
+  window.hideEasterEgg = function() {
+    easterImg.classList.add('hidden');
+  };
+
+  window.showEasterEgg = function() {
+    if (easterImg.src && easterImg.src.trim() !== '') {
+      easterImg.classList.remove('hidden');
+    } else {
+      console.warn('Gambar belum diset. Gunakan setEasterEggImage(url).');
+    }
+  };
+
+  window.setEasterHintText = function(text) {
+    if (typeof text !== 'string') {
+      console.warn('Hint harus string.');
+      return;
+    }
+    currentHint = text;
+  };
+
+  /* Contoh singkat (komentar):
+     Untuk menampilkan easter egg dari console, jalankan:
+       setEasterEggImage('https://example.com/image.png', 64);
+       setEasterHintText('Petunjuk: buka menu rahasia di pojok kiri.');
+     Atau jika Anda langsung meng-edit file: isi atribut src pada <img id="easterImg" src="..."> dan hapus class "hidden".
+  */
 </script>
 
 </body>
